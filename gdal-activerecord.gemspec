@@ -5,7 +5,7 @@ require 'gdal/activerecord/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "gdal-activerecord"
-  spec.version       = Gdal::Activerecord::VERSION
+  spec.version       = GDAL::ActiveRecord::VERSION
   spec.authors       = ["Steve Loveless"]
   spec.email         = ["steve@agrian.com"]
   spec.summary       = %q{TODO: Write a short summary. Required.}
