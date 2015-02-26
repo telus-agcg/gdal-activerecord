@@ -15,7 +15,7 @@ module ActiveRecord
 end
 
 require_relative 'postgresql_adapter_methods'
-require_relative 'postgis_adapter/schema_cache'
+require_relative 'postgis_adapter/database_statements'
 require_relative 'postgis_adapter/schema_statements'
 require_relative 'postgis_adapter/table_definition'
 
@@ -23,7 +23,8 @@ module ActiveRecord
   module ConnectionAdapters
     class PostGISAdapter
       include PostgreSQLAdapterMethods
-      include SchemaStatements
+      include PostGISAdapter::DatabaseStatements
+      include PostGISAdapter::SchemaStatements
 
       ADAPTER_NAME = 'PostGIS'.freeze
 
@@ -34,10 +35,9 @@ module ActiveRecord
       def initialize(connection, logger = nil, connection_parameters, config)
         super(connection, logger)
 
-        # @visitor = ::Arel::Visitors::PostGIS.new(self)
+        @visitor = ::Arel::Visitors::PostGIS.new(self)
         @connection_parameters, @config = connection_parameters, config
         connect
-        @schema_cache = PostGISAdapter::SchemaCache.new(self)
       end
 
       def connect
@@ -88,15 +88,13 @@ module ActiveRecord
         exec_query(sql, name, binds)
       end
 
+      def exec_no_cache(sql, name, binds)
+        log(sql, name, binds) { @connection.execute_sql(sql) }
+      end
+
       def column_types
         puts "column types"
       end
-
-      # def type_cast(*values)
-      #   # puts "type_cast: #{values}"
-      #   # puts "type_cast: #{values.size}"
-      #   super
-      # end
 
       private
 
