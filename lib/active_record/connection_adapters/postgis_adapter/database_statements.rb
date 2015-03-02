@@ -27,7 +27,8 @@ module ActiveRecord
             # end
             #
             # result
-            @connection.execute_sql(sql)
+            # @connection.execute_sql(sql)
+            exec_query(sql)
           end
         end
 
@@ -41,11 +42,9 @@ module ActiveRecord
           end
 
           rows = extract_rows(layer)
-          puts "rows: #{rows}"
           columns = extract_column_names(layer)
-          puts "columns: #{columns}"
           types = extract_column_types(layer)
-          puts "types: #{types}"
+
           @connection.release_result_set(layer)
 
           ActiveRecord::Result.new(columns, rows, types)
@@ -58,7 +57,30 @@ module ActiveRecord
         end
 
         def extract_column_types(layer)
-          layer.feature_definition.field_definitions.map(&:type)
+          puts "fid: #{layer.fid_column}"
+
+          layer.feature_definition.field_definitions.each_with_object({}) do |field_definition, o|
+            o[field_definition.name] =
+              case field_definition.type
+              when :OFTInteger        then PostgreSQLAdapter::OID::Integer.new
+              when :OFTIntegerList    then PostgreSQLAdapter::OID::Array.new('integer')
+              when :OFTReal           then PostgreSQLAdapter::OID::Float.new
+              when :OFTRealList       then PostgreSQLAdapter::OID::Array.new('float')
+              when :OFTString         then PostgreSQLAdapter::OID::Identity.new
+              when :OFTStringList     then PostgreSQLAdapter::OID::Array.new('string')
+              when :OFTWideString     then PostgreSQLAdapter::OID::Identity.new
+              when :OFTWideStringList then PostgreSQLAdapter::OID::Array.new('string')
+              when :OFTBinary         then PostgreSQLAdapter::OID::Bytea.new
+              when :OFTDate           then PostgreSQLAdapter::OID::Date.new
+              when :OFTTime           then PostgreSQLAdapter::OID::Time.new
+              when :OFTDateTime       then PostgreSQLAdapter::OID::Timestamp.new
+              when :OFTInteger64      then PostgreSQLAdapter::OID::Integer.new
+              when :OFTInteger64List  then PostgreSQLAdapter::OID::Array.new('integer')
+              when :OFTMaxType        then PostgreSQLAdapter::OID::Date.new
+              else
+                puts "fd type: #{fd.type}"
+              end
+          end
         end
 
         # @param [OGR::Layer] layer
