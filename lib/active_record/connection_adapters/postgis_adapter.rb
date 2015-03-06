@@ -16,6 +16,8 @@ end
 
 require_relative 'postgis_adapter/database_statements'
 require_relative 'postgis_adapter/schema_statements'
+require_relative 'postgis_adapter/postgis_column'
+require_relative 'postgis_adapter/table_definition'
 require_relative 'postgresql/oid'
 
 module ActiveRecord
@@ -49,6 +51,15 @@ module ActiveRecord
         @connection = driver.open(connection_string, 'r')
       end
 
+      def disconnect!
+        @connection.close
+      end
+
+      # @return [Hash]
+      def native_database_types
+        super.merge(POSTGIS_NATIVE_DATABASE_TYPES)
+      end
+
       def exec_no_cache(sql, name, binds)
         log(sql, name, binds) { @connection.execute_sql(sql) }
       end
@@ -68,6 +79,14 @@ module ActiveRecord
         result = exec_query('SHOW server_version_num;')
 
         result.rows.first.first.to_i
+      end
+
+      # @return [String] The full result of PostGIS_Version(). ex. "2.1
+      #   USE_GEOS=1 USE_PROJ=1 USE_STATS=1"
+      def postgis_version
+        result = exec_query('SELECT PostGIS_Version();')
+
+        result.rows.first.first.to_s
       end
 
       private

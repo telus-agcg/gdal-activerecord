@@ -12,27 +12,12 @@ module ActiveRecord
         # @return [OGR::Layer]
         def execute(sql, name = nil)
           log(sql, name) do
-            # layer = @connection.execute_sql(sql)
-            #
-            # feature = layer.next_feature
-            #
-            # result = []
-            #
-            # until feature.nil?
-            #   result << feature.fields.map do |field|
-            #     field[:value_as_string]
-            #   end
-            #
-            #   feature = layer.next_feature
-            # end
-            #
-            # result
-            # @connection.execute_sql(sql)
             exec_query(sql)
           end
         end
 
         # @param [String] sql
+        # @param [Array] binds Column/value pairs.
         # @return [ActiveRecord::Result]
         def exec_query(sql, name = 'SQL', binds = [])
           layer = if without_prepared_statement?(binds)
@@ -52,13 +37,47 @@ module ActiveRecord
 
         private
 
+        # Gets all of the column names from the OGR::Layer (which is the result
+        # of the SQL query). Names are retrieved from FieldDefinitions and
+        # GeometryFieldDefinitions, then concatenated into a single array.
+        #
+        # @param [OGR::Layer] layer The result of the SQL query.
+        # @return [Array<String>]
         def extract_column_names(layer)
-          layer.feature_definition.field_definitions.map(&:name)
+          field_names = Array.new(layer.feature_definition.field_count)
+          geometry_field_names = Array.new(layer.feature_definition.geometry_field_count)
+
+          layer.feature_definition.field_definitions.each do |fd|
+            field_def_index = layer.feature_definition.field_index(fd.name)
+            field_names[field_def_index] = fd.name
+          end
+
+          layer.feature_definition.geometry_field_definitions.each do |gfd|
+            geometry_field_def_index = layer.feature_definition.geometry_field_index(gfd.name)
+            geometry_field_names[geometry_field_def_index] = gfd.name
+          end
+
+          field_names + geometry_field_names
         end
 
+        # @param [OGR::Layer] layer
+        # @return [Hash{OGR::GeometryFieldDefinition#name,OGR::FieldDefinition#name =>
+        #   PostgreSQLAdapter::OID::Geometry}]
         def extract_column_types(layer)
-          puts "fid: #{layer.fid_column}"
+          extract_non_geometric_types(layer).merge(extract_geometric_types(layer))
+        end
 
+        # @param [OGR::Layer] layer
+        # @return [Hash{OGR::GeometryFieldDefinition#name => PostgreSQLAdapter::OID::Geometry}]
+        def extract_geometric_types(layer)
+          layer.feature_definition.geometry_field_definitions.each_with_object({}) do |geometry_field_definition, o|
+            o[geometry_field_definition.name] = PostgreSQLAdapter::OID::Geometry.new
+          end
+        end
+
+        # @param [OGR::Layer] layer
+        # @return [Hash{OGR::FieldDefinition#name => PostgreSQLAdapter::OID}]
+        def extract_non_geometric_types(layer)
           layer.feature_definition.field_definitions.each_with_object({}) do |field_definition, o|
             o[field_definition.name] =
               case field_definition.type
@@ -78,24 +97,29 @@ module ActiveRecord
               when :OFTInteger64List  then PostgreSQLAdapter::OID::Array.new('integer')
               when :OFTMaxType        then PostgreSQLAdapter::OID::Date.new
               else
-                puts "fd type: #{fd.type}"
+                puts "not sure about fd type: #{fd.type}"
               end
           end
         end
 
+        # Column values
         # @param [OGR::Layer] layer
-        # @return [Array<String>] Data needed to build a ActiveRecord::Result.
+        # @return [Array<Array<String>>] A 2d array, where the each element of
+        #   the parent array is an array that represents values for each column.
         def extract_rows(layer)
           rows = []
           layer.reset_reading
           feature = layer.next_feature
 
           until feature.nil?
-            rows << feature.fields.map do |field|
-              field[:value_as_string]
+            row = []
+            row += feature.fields.map do |field|
+              field
             end
 
+            row << feature.geometry
             feature = layer.next_feature
+            rows << row
           end
 
           rows
