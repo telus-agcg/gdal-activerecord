@@ -11,8 +11,13 @@ module ActiveRecord
         # @param [String] sql
         # @return [OGR::Layer]
         def execute(sql, name = nil)
+          puts "execute with driver: #{@driver_in_use}"
           log(sql, name) do
-            exec_query(sql)
+            if @driver_in_use == :pg
+              super
+            else
+              exec_query(sql)
+            end
           end
         end
 
@@ -20,6 +25,17 @@ module ActiveRecord
         # @param [Array] binds Column/value pairs.
         # @return [ActiveRecord::Result]
         def exec_query(sql, name = 'SQL', binds = [])
+          puts "exec_query with driver: #{@driver_in_use}"
+          if @driver_in_use == :pg
+            super
+          else
+            exec_query_with_ogr(sql, name, binds)
+          end
+        end
+
+        private
+
+        def exec_query_with_ogr(sql, name, binds)
           layer = if without_prepared_statement?(binds)
             exec_no_cache(sql, name, binds)
           else
@@ -35,8 +51,6 @@ module ActiveRecord
           ActiveRecord::Result.new(columns, rows, types)
         end
 
-        private
-
         # Gets all of the column names from the OGR::Layer (which is the result
         # of the SQL query). Names are retrieved from FieldDefinitions and
         # GeometryFieldDefinitions, then concatenated into a single array.
@@ -44,6 +58,8 @@ module ActiveRecord
         # @param [OGR::Layer] layer The result of the SQL query.
         # @return [Array<String>]
         def extract_column_names(layer)
+          return [] if layer.nil?
+
           field_names = Array.new(layer.feature_definition.field_count)
           geometry_field_names = Array.new(layer.feature_definition.geometry_field_count)
 
@@ -64,12 +80,16 @@ module ActiveRecord
         # @return [Hash{OGR::GeometryFieldDefinition#name,OGR::FieldDefinition#name =>
         #   PostgreSQLAdapter::OID::Geometry}]
         def extract_column_types(layer)
+          return {} if layer.nil?
+
           extract_non_geometric_types(layer).merge(extract_geometric_types(layer))
         end
 
         # @param [OGR::Layer] layer
         # @return [Hash{OGR::GeometryFieldDefinition#name => PostgreSQLAdapter::OID::Geometry}]
         def extract_geometric_types(layer)
+          return {} if layer.nil?
+
           layer.feature_definition.geometry_field_definitions.each_with_object({}) do |geometry_field_definition, o|
             o[geometry_field_definition.name] = PostgreSQLAdapter::OID::Geometry.new
           end
@@ -78,6 +98,8 @@ module ActiveRecord
         # @param [OGR::Layer] layer
         # @return [Hash{OGR::FieldDefinition#name => PostgreSQLAdapter::OID}]
         def extract_non_geometric_types(layer)
+          return {} if layer.nil?
+
           layer.feature_definition.field_definitions.each_with_object({}) do |field_definition, o|
             o[field_definition.name] =
               case field_definition.type
@@ -107,6 +129,8 @@ module ActiveRecord
         # @return [Array<Array<String>>] A 2d array, where the each element of
         #   the parent array is an array that represents values for each column.
         def extract_rows(layer)
+          return [[]] if layer.nil?
+
           rows = []
           layer.reset_reading
           feature = layer.next_feature

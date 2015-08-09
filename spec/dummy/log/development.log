@@ -1,0 +1,181 @@
+  [1m[36m (1.2ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) [0m
+  [1m[35m (0.1ms)[0m  select sqlite_version(*)
+  [1m[36m (0.9ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to CreateCoreBlobs (20140916235725)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  CREATE TABLE "core_blobs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "field_id" integer, "grower_id" integer, "farm_id" integer, "planting_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.1ms)[0m  [1mCREATE  INDEX "index_core_blobs_on_field_id" ON "core_blobs" ("field_id")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_field_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_field_id' AND type='index'
+
+  [1m[36m (0.2ms)[0m  [1mCREATE  INDEX "index_core_blobs_on_grower_id" ON "core_blobs" ("grower_id")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_grower_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_grower_id' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_field_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_field_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  CREATE  INDEX "index_core_blobs_on_farm_id" ON "core_blobs" ("farm_id")
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_farm_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_farm_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_grower_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_grower_id' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_field_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_field_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  CREATE  INDEX "index_core_blobs_on_planting_id" ON "core_blobs" ("planting_id")
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140916235725"]]
+  [1m[35m (0.8ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_planting_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_planting_id' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_farm_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_farm_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_grower_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_grower_id' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_core_blobs_on_field_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_core_blobs_on_field_id' AND type='index'
+[0m
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  rollback transaction
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  rollback transaction
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+DEPRECATION WARNING: Returning errors as an array of strings is deprecated. (called from irb_binding at (irb):7)
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "core_blobs" ("created_at", "updated_at") VALUES (?, ?)  [["created_at", "2014-09-17 00:06:30.516378"], ["updated_at", "2014-09-17 00:06:30.516378"]]
+  [1m[36m (0.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  SELECT COUNT(*) FROM "core_blobs"
+  [1m[36mCoreBlob Load (0.2ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"  WHERE "core_blobs"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.3ms)[0m  [1mUPDATE "core_blobs" SET "farm_id" = ?, "updated_at" = ? WHERE "core_blobs"."id" = 1[0m  [["farm_id", 12], ["updated_at", "2014-09-17 00:08:26.034818"]]
+  [1m[35m (0.8ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to CreateCoreBlobs (20140916235725)
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  DROP TABLE "core_blobs"
+  [1m[36mSQL (0.1ms)[0m  [1mDELETE FROM "schema_migrations" WHERE "schema_migrations"."version" = '20140916235725'[0m
+  [1m[35m (0.9ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateCoreBlobs (20140916235725)
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36m (0.1ms)[0m  [1mrollback transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateCoreBlobs (20140916235725)
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "core_blobs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "grower_id" varchar(255), "farm_id" varchar(255), "field_id" varchar(255), "planting_id" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20140916235725"]]
+  [1m[36m (7.1ms)[0m  [1mcommit transaction[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (1.0ms)[0m  CREATE TABLE "core_blobs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "grower_id" varchar(255), "farm_id" varchar(255), "field_id" varchar(255), "planting_id" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (1.0ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) [0m
+  [1m[35m (0.1ms)[0m  select sqlite_version(*)
+  [1m[36m (1.0ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35m (0.1ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (0.9ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20140916235725')[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "core_blobs" ("created_at", "farm_id", "updated_at") VALUES (?, ?, ?)[0m  [["created_at", "2014-09-17 00:11:55.135947"], ["farm_id", "12eb4bef-3905-484d-b716-270f0af72235"], ["updated_at", "2014-09-17 00:11:55.135947"]]
+  [1m[35m (0.9ms)[0m  commit transaction
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.2ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.4ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36m (0.1ms)[0m  [1mcommit transaction[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "core_blobs" SET "grower_id" = ?, "updated_at" = ? WHERE "core_blobs"."id" = 1[0m  [["grower_id", "39b6f601-bc93-44c2-8a77-59830d790c1f"], ["updated_at", "2014-09-17 06:44:27.620283"]]
+  [1m[35m (0.8ms)[0m  commit transaction
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mUPDATE "core_blobs" SET "field_id" = ?, "updated_at" = ? WHERE "core_blobs"."id" = 1[0m  [["field_id", "fe588e7f-668f-4f7d-94c1-667e61ee37e5"], ["updated_at", "2014-09-17 07:02:09.983774"]]
+  [1m[35m (7.2ms)[0m  commit transaction
+  [1m[36mCoreBlob Load (0.4ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.2ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.2ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.2ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.2ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.1ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.2ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.2ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.4ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[36mCoreBlob Load (0.2ms)[0m  [1mSELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1[0m
+  [1m[35mCoreBlob Load (0.2ms)[0m  SELECT  "core_blobs".* FROM "core_blobs"   ORDER BY "core_blobs"."id" ASC LIMIT 1

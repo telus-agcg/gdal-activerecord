@@ -5,6 +5,14 @@ module ActiveRecord
     class PostGISAdapter
       module SchemaStatements
 
+        def create_database(name, options = {})
+          run_as_pg { super }
+        end
+
+        def drop_database(name)
+          run_as_pg { super }
+        end
+
         # Names of tables in the current DB.
         #
         # @return [Array<String>]
@@ -40,6 +48,7 @@ module ActiveRecord
             PostGISColumn.new(column_name, default, oid, type, notnull == 'f', srid: srid)
           end
         end
+
       end
     end
   end

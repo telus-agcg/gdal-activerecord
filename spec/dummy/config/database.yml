@@ -1,0 +1,15 @@
+default: &default
+  adapter: postgis
+  encoding: unicode
+  pool: 5
+  schema_search_path: public
+  timeout: 5000
+  username: <%= `whoami` %>
+
+development:
+  <<: *default
+  database: gdal-activerecord_development
+
+test:
+  <<: *default
+  database: gdal-activerecord_test

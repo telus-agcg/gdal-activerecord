@@ -1,4 +1,3 @@
-require 'active_record/connection_adapters/postgresql_adapter'
 require_relative '../postgresql/oid'
 require 'ogr/geometry'
 require 'ogr/spatial_reference'
@@ -11,6 +10,11 @@ module ActiveRecord
       # @return [OGR::Geometry]
       def self.convert_to_geometry(value, srid)
         geometry = OGR::Geometry.create_from_wkt(value)
+
+        if geometry.nil?
+          fail OGR::InvalidGeometry, "Unable to create geometry from '#{value}'"
+        end
+
         geometry.spatial_reference = OGR::SpatialReference.new_from_epsg(srid)
 
         geometry

@@ -5,7 +5,7 @@ module ActiveRecord
   module ConnectionAdapters
     module PostGISAdapter
       class Railtie < ::Rails::Railtie
-
+        load 'active_record/railties/databases.rake'
       end
     end
   end
