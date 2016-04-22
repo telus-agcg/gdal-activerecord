@@ -33,7 +33,7 @@ module ActiveRecord
 
       POSTGIS_NATIVE_DATABASE_TYPES = {
         geometry: { name: 'geometry' }
-      }
+      }.freeze
 
       # @param [Hash] connection_parameters Params gleaned from the
       #   database.yml, used for making the connection to PostgreSQL.
@@ -43,7 +43,8 @@ module ActiveRecord
         super(connection, logger, connection_parameters, config)
 
         @driver_in_use = :ogr
-        @connection_parameters, @config = connection_parameters, config
+        @connection_parameters = connection_parameters
+        @config = config
         connect_with_ogr
 
         @visitor = ::Arel::Visitors::PostGIS.new(self)

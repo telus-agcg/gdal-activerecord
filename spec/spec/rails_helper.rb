@@ -25,10 +25,4 @@ RSpec.configure do |config|
 
   config.use_transactional_fixtures = false
   # config.fixture_path = "#{::Rails.root}/../fixtures"
-  config.fixture_path = File.expand_path('fixtures', File.dirname(__FILE__))
-  config.global_fixtures = :all
-
-  config.before :each do
-    User.current = nil
-  end
 end

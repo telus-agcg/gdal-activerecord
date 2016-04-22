@@ -4,7 +4,6 @@ module ActiveRecord
   module ConnectionAdapters
     class PostGISAdapter
       module SchemaStatements
-
         def create_database(name, options = {})
           run_as_pg { super }
         end
@@ -48,7 +47,6 @@ module ActiveRecord
             PostGISColumn.new(column_name, default, oid, type, notnull == 'f', srid: srid)
           end
         end
-
       end
     end
   end

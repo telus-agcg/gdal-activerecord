@@ -37,9 +37,9 @@ module ActiveRecord
 
         def exec_query_with_ogr(sql, name, binds)
           layer = if without_prepared_statement?(binds)
-            exec_no_cache(sql, name, binds)
-          else
-            exec_cache(sql, name, binds)
+                    exec_no_cache(sql, name, binds)
+                  else
+                    exec_cache(sql, name, binds)
           end
 
           rows = extract_rows(layer)

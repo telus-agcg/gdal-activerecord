@@ -12,7 +12,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20_140_916_235_725) do
-
   create_table 'core_blobs', force: true do |t|
     t.string 'grower_id'
     t.string 'farm_id'
@@ -21,5 +20,4 @@ ActiveRecord::Schema.define(version: 20_140_916_235_725) do
     t.datetime 'created_at'
     t.datetime 'updated_at'
   end
-
 end

@@ -11,7 +11,7 @@ module ActiveRecord
       schemas
       tables
       user
-    ]
+    ].freeze
 
     def postgis_connection(config)
       puts "config: #{config}"

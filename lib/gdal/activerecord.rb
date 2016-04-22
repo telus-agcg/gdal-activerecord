@@ -1,4 +1,4 @@
-require "gdal/activerecord/version"
+require 'gdal/activerecord/version'
 require_relative '../active_record/connection_adapters/postgis_adapter'
 
 module GDAL

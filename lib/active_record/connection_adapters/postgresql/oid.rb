@@ -14,7 +14,7 @@ module ActiveRecord
           end
         end
 
-        self.register_type 'geometry', Geometry.new
+        register_type 'geometry', Geometry.new
       end
     end
   end

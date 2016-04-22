@@ -12,7 +12,7 @@ module ActiveRecord
         geometry = OGR::Geometry.create_from_wkt(value)
 
         if geometry.nil?
-          fail OGR::InvalidGeometry, "Unable to create geometry from '#{value}'"
+          raise OGR::InvalidGeometry, "Unable to create geometry from '#{value}'"
         end
 
         geometry.spatial_reference = OGR::SpatialReference.new_from_epsg(srid)
@@ -35,7 +35,7 @@ module ActiveRecord
       #
       # @return [Boolean]
       def geometry?
-        !!(@sql_type =~ /\Ageometry/)
+        !!@sql_type.start_with?('geometry')
       end
 
       # TODO: implement geographys
@@ -54,7 +54,7 @@ module ActiveRecord
       #
       # @return [Boolean]
       def raster?
-        !!(@sql_type =~ /\Araster/)
+        !!@sql_type.start_with?('raster')
       end
 
       # Is this a regular ol' PostgreSQL column?
