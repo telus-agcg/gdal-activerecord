@@ -2,7 +2,7 @@ require 'active_record'
 require 'active_record/connection_adapters/postgresql_adapter'
 require 'ffi-gdal'
 # GDAL::Logger.logging_enabled = true
-require 'ogr/driver'
+require 'pg'
 
 require_relative '../../arel/visitors/postgis'
 require_relative '../connection_handling'
@@ -39,54 +39,15 @@ module ActiveRecord
       #   database.yml, used for making the connection to PostgreSQL.
       # @param [Hash] config Other params used for configuring
       #   PostgreSQL/PostGIS.
-      def initialize(connection, logger = nil, connection_parameters, config)
-        super(connection, logger, connection_parameters, config)
-
-        @driver_in_use = :ogr
-        @connection_parameters = connection_parameters
-        @config = config
-        connect_with_ogr
+      def initialize(*args)
+        super
 
         @visitor = ::Arel::Visitors::PostGIS.new(self)
-      end
-
-      def connect_with_ogr
-        ENV['PG_LIST_ALL_TABLES'] ||= 'YES'
-        driver = OGR::Driver.by_name('PostgreSQL')
-        puts "connection string: #{connection_string}"
-        @driver_in_use = :ogr
-        @connection = driver.open(connection_string, 'r')
-      end
-
-      def connect
-        if @driver_in_use == :pg
-          super
-        else
-          connect_with_ogr
-        end
-      end
-
-      def disconnect!
-        if @driver_in_use == :pg
-          super
-        else
-          @connection.close
-        end
       end
 
       # @return [Hash]
       def native_database_types
         super.merge(POSTGIS_NATIVE_DATABASE_TYPES)
-      end
-
-      def exec_no_cache(sql, name, binds)
-        log(sql, name, binds) do
-          if @driver_in_use == :pg
-            super
-          else
-            @connection.execute_sql(sql)
-          end
-        end
       end
 
       # @return [Boolean]
@@ -117,30 +78,12 @@ module ActiveRecord
 
       protected
 
-      # @return [Fixnum] The result of `SHOW server_version_num;`.
-      def postgresql_version
-        return super if @driver_in_use == :pg
-
-        result = exec_query('SHOW server_version_num;')
-
-        result.rows.first.first.to_i
-      end
-
       # @return [String] The full result of PostGIS_Version(). ex. "2.1
       #   USE_GEOS=1 USE_PROJ=1 USE_STATS=1"
       def postgis_version
-        return super if @driver_in_use == :pg
-
         result = exec_query('SELECT PostGIS_Version();')
 
         result.rows.first.first.to_s
-      end
-
-      def run_as_pg
-        previous_driver = @driver_in_use
-        @driver_in_use = :pg
-        yield
-        @driver_in_use = previous_driver
       end
 
       private

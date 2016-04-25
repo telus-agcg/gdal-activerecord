@@ -1,36 +1,10 @@
 require_relative 'postgis_column'
+require_relative '../postgresql/oid'
 
 module ActiveRecord
   module ConnectionAdapters
     class PostGISAdapter
       module SchemaStatements
-        def create_database(name, options = {})
-          run_as_pg { super }
-        end
-
-        def drop_database(name)
-          run_as_pg { super }
-        end
-
-        # Names of tables in the current DB.
-        #
-        # @return [Array<String>]
-        def tables(_table_type = nil)
-          @connection.layers.map(&:name)
-        end
-
-        # Returns true if table exists.
-        # If the schema is not specified as part of +name+ then it will only
-        # find tables within the current schema search path (regardless of
-        # permissions to access tables in other schemas).
-        #
-        # @param table_name [String]
-        def table_exists?(table_name)
-          return false if table_name.blank?
-
-          !!@connection.layer_by_name(table_name)
-        end
-
         # @param [String] table_name
         # @return [Array<ActiveRecord::ConnectionAdapters::PostGISAdapter::PostGISColumn>]
         def columns(table_name)
@@ -45,6 +19,23 @@ module ActiveRecord
             end
 
             PostGISColumn.new(column_name, default, oid, type, notnull == 'f', srid: srid)
+          end
+        end
+
+        def initialize_type_map(map)
+          super
+
+          %w[
+            geometry
+            point multi_point
+            line_string linear_ring multi_line_string
+            polygon multi_polygon
+            geometry_collection
+          ].each do |geo_type|
+            map.register_type(geo_type) do |_oid, _meow, sql_type|
+              puts "_meow is #{_meow.inspect}"
+              PostgreSQLAdapter::OID::Geometry.new(sql_type)
+            end
           end
         end
       end

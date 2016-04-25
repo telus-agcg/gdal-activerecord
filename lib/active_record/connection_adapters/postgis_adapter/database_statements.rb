@@ -4,33 +4,10 @@ module ActiveRecord
   module ConnectionAdapters
     class PostGISAdapter
       module DatabaseStatements
-        include ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::DatabaseStatements
-
-        # Executes SQL and returns the resulting Layer.
-        #
-        # @param [String] sql
-        # @return [OGR::Layer]
-        def execute(sql, name = nil)
-          puts "execute with driver: #{@driver_in_use}"
-          log(sql, name) do
-            if @driver_in_use == :pg
-              super
-            else
-              exec_query(sql)
-            end
-          end
-        end
-
-        # @param [String] sql
-        # @param [Array] binds Column/value pairs.
-        # @return [ActiveRecord::Result]
-        def exec_query(sql, name = 'SQL', binds = [])
-          puts "exec_query with driver: #{@driver_in_use}"
-          if @driver_in_use == :pg
-            super
-          else
-            exec_query_with_ogr(sql, name, binds)
-          end
+        if ActiveRecord::VERSION::STRING < '4.2'
+          include ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::DatabaseStatements
+        else
+          include ActiveRecord::ConnectionAdapters::PostgreSQL::DatabaseStatements
         end
 
         private

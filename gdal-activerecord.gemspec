@@ -8,9 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = GDAL::ActiveRecord::VERSION
   spec.authors       = ['Steve Loveless']
   spec.email         = ['steve@agrian.com']
-  spec.summary       = 'TODO: Write a short summary. Required.'
-  spec.description   = 'TODO: Write a longer description. Optional.'
-  spec.homepage      = ''
+  spec.summary       = 'Use GDAL with PostGIS via ActiveRecord'
+  spec.homepage      = 'https://bitbucket.org/agrian/gdal-activerecord'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
