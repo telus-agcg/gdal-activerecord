@@ -29,6 +29,10 @@ module ActiveRecord
           # Defines how to marshal the value from the database to a Ruby object.
           # In our case, this should return an OGR::Geometry.
           #
+          # Type::Value#type_cast_from_user and
+          # Type::Value#type_cast_from_database both call this (through
+          # Type::Value#type_cast).
+          #
           # @param value [String, nil] The bytea/EWKB stored in the database.
           # @return [OGR::Geometry]
           def cast_value(value)

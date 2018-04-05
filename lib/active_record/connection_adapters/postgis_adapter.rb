@@ -86,6 +86,35 @@ module ActiveRecord
         result.rows.first.first.to_s
       end
 
+      # def log_with_binary_truncate(sql, name = 'SQL', binds = [], statement_name = nil, &block)
+      #   binds = binds.map do |col, data|
+      #     data = "[REDACTED EWBK (#{data.length} bytes]" if data.is_a?(String) && ["\x00", "\x01"]. include?(data[0])
+
+      #     [col, data]
+      #   end
+
+      #   sql = sql.gsub(/(?<='\\x[0-9a-f]{100})[0-9a-f]{100,}?(?=[0-9a-f]{100}')/) do |match|
+      #     "[REDACTED #{match.size} chars]"
+      #   end
+
+      #   log_without_binary_truncate(sql, name, binds, statement_name, &block)
+      # end
+
+      # alias_method_chain :log, :binary_truncate
+      # def log(sql, name = 'SQL', binds = [], statement_name = nil, &block)
+      #   binds = binds.map do |col, data|
+      #     data = "[REDACTED EWBK (#{data.length} bytes]" if data.is_a?(String) && ["\x00", "\x01"]. include?(data[0])
+
+      #     [col, data]
+      #   end
+
+      #   sql = sql.gsub(/(?<='\\x[0-9a-f]{100})[0-9a-f]{100,}?(?=[0-9a-f]{100}')/) do |match|
+      #     "[REDACTED #{match.size} chars]"
+      #   end
+
+      #   super(sql, name, binds, statement_name, &block)
+      # end
+
       private
 
       # The take the form:
